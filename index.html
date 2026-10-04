@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Piyali's Service - Payment Page</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #d4145a;
+    color: black;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 15px 10px;
+}
+
+h1 {
+    font-size: 28px;
+    margin: 10px auto 15px;
+}
+
+h2 {
+    font-size: 19px;
+    line-height: 1.5;
+    max-width: 700px;
+    margin: 15px auto;
+}
+
+h3 {
+    font-size: 20px;
+    margin: 18px auto 10px;
+}
+
+.hearts {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.box {
+    background: black;
+    color: white;
+    padding: 15px;
+    margin: 15px auto;
+    border-radius: 10px;
+    width: 95%;
+    max-width: 500px;
+    line-height: 1.5;
+}
+
+input[type="number"],
+input[type="text"],
+input[type="file"] {
+    padding: 12px;
+    margin: 10px auto;
+    width: 95%;
+    max-width: 400px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background: white;
+    color: black;
+    font-size: 16px;
+    display: block;
+}
+
+input[type="file"] {
+    padding: 10px;
+}
+
+button {
+    padding: 12px 22px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    touch-action: manipulation;
+}
+
+.red-btn {
+    background: red;
+    color: white;
+    border-radius: 5px;
+}
+
+/* PAY NOW BUTTON */
+
+.pay-now {
+    background: #00c853;
+    color: white;
+    border-radius: 7px;
+    padding: 14px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow:
+        0 0 5px #00ff66,
+        0 0 10px #00ff66,
+        0 0 20px #00ff66,
+        0 0 35px #00ff66;
+    animation: neonPulse 1.5s infinite alternate;
+}
+
+.pay-now:hover {
+    background: #00e676;
+    transform: scale(1.04);
+}
+
+@keyframes neonPulse {
+    from {
+        box-shadow:
+            0 0 5px #00ff66,
+            0 0 10px #00ff66,
+            0 0 20px #00ff66;
+    }
+
+    to {
+        box-shadow:
+            0 0 10px #00ff66,
+            0 0 20px #00ff66,
+            0 0 35px #00ff66,
+            0 0 50px #00ff66;
+    }
+}
+
+.glow {
+    background: green;
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 15px lime;
+}
+
+#qrImage {
+    width: 200px;
+    height: 200px;
+    max-width: 80vw;
+    object-fit: contain;
+    margin: 10px auto;
+}
+
+.payment-qr {
+    width: 200px;
+    max-width: 80vw;
+    height: auto;
+}
+
+/* Popup */
+
+.popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 9999;
+}
+
+.popup {
+    background: white;
+    color: black;
+    width: 95%;
+    max-width: 400px;
+    padding: 25px 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0,0,0,0.5);
+}
+
+.popup h2 {
+    color: black;
+    font-size: 21px;
+    margin: 0 0 20px;
+}
+
+.popup button {
+    background: #d4145a;
+    color: white;
+    border-radius: 6px;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 10px 7px;
+    }
+
+    h1 {
+        font-size: 23px;
+    }
+
+    h2 {
+        font-size: 17px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    .box {
+        width: 96%;
+        padding: 13px;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    input[type="file"] {
+        width: 96%;
+        font-size: 16px;
+    }
+
+    button {
+        min-height: 44px;
+    }
+
+    .pay-now {
+        font-size: 17px;
+        padding: 13px 28px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Piyali's Service - Real Meet & Video Call 🎀</h1>
+
+<div class="hearts">
+💖 💕 💘 💝 💗 💓
+</div>
+
+<h2>
+পেমেন্ট করলেই আপনি সঙ্গে সঙ্গে দুটি নম্বর পাবেন—একটি হোয়াটসঅ্যাপ এবং একটি আমার কলিং নম্বর। 📲
+<br><br>
+पेमेंट करते ही आपको तुरंत दो नंबर मिलेंगे—एक व्हाट्सएप और एक मेरा कॉलिंग नंबर। 📞💬✨
+</h2>
+
+<div class="box">
+নিচে টাকার পরিমাণ লিখুন এবং Pay Now বাটনে ক্লিক করুন।
+<br><br>
+नीचे अमाउंट लिखकर Pay Now बटन पर क्लिक करें।
+</div>
+
+<h3>Enter Amount 💳</h3>
+
+<input
+    type="number"
+    id="amount"
+    placeholder="Enter Amount"
+    inputmode="numeric"
+>
+
+<br>
+
+<button class="pay-now" onclick="payNow()">
+    PAY NOW 💳
+</button>
+
+<br><br>
+
+<div class="box">
+পরিমাণ লিখতে অসুবিধা হলে নিচের QR কোড স্ক্যান করুন
+<br><br>
+अगर अमाउंट लिखने में दिक्कत हो तो नीचे QR स्कैन करें
+</div>
+
+<!-- Uploaded QR -->
+
+<img
+    src="payment.png"
+    width="200"
+    class="payment-qr"
+    alt="Payment QR"
+>
+
+<br><br>
+
+<h3>Upload Payment Screenshot 📸 (Required)</h3>
+
+<input
+    type="file"
+    id="screenshot"
+    accept="image/*"
+>
+
+<h3>
+আপনার নাম ও নম্বর লিখুন যাতে আমরা যোগাযোগ করতে পারি। 📞
+<br>
+সাথে আপনি কী সার্ভিস চান ভিডিও কল না কি রিয়েল মিট, সেটিও জানান। ✨
+
+<br><br>
+
+संपर्क के लिए अपना नाम और नंबर लिखें। 📞
+<br>
+साथ ही बताएं कि आप कौन सी सर्विस चाहते हैं—वीडियो कॉल या रियल मीट। ✨
+</h3>
+
+<input
+    type="text"
+    id="contactInfo"
+    placeholder="Name + Number + Service (Video Call / Real Meet)"
+>
+
+<div class="box">
+Payment করে screenshot upload করলেই contact করা হবে 📞
+</div>
+
+<br>
+
+<button class="glow" onclick="doneMessage()">
+DONE ✅
+</button>
+
+
+<!-- Popup -->
+
+<div class="popup-overlay" id="popup">
+
+    <div class="popup">
+
+        <h2>
+            Thank you for your payment-we contact you shortly
+        </h2>
+
+        <button onclick="closePopup()">
+            OK
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* PAY NOW */
+
+function payNow() {
+
+    var amount =
+        document.getElementById("amount").value.trim();
+
+    if (amount === "") {
+
+        alert("Enter amount first!");
+
+        return;
+    }
+
+    if (Number(amount) <= 0) {
+
+        alert("Please enter a valid amount!");
+
+        return;
+    }
+
+    /*
+       UPI PAYMENT DETAILS
+       UPI ID: piyalisweetumisti@nsdl
+    */
+
+    var upi =
+        "upi://pay"
+        + "?pa=piyalisweetumisti@nsdl"
+        + "&pn=Payment"
+        + "&am=" + encodeURIComponent(amount)
+        + "&cu=INR";
+
+    /*
+       Opens the UPI payment link.
+       On compatible Android devices,
+       the installed UPI apps can be offered
+       by the device/browser.
+    */
+
+    window.location.href = upi;
+}
+
+
+/* DONE BUTTON */
+
+function doneMessage() {
+
+    var file =
+        document.getElementById("screenshot").files.length;
+
+    if (file === 0) {
+
+        alert("Please upload payment screenshot first 📸");
+
+        return;
+    }
+
+    document.getElementById("popup").style.display = "flex";
+}
+
+
+/* CLOSE POPUP */
+
+function closePopup() {
+
+    document.getElementById("popup").style.display = "none";
+
+}
+
+</script>
+
+</body>
+</html>
