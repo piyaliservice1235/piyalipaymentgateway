@@ -56,7 +56,7 @@
         font-weight: bold;
     }
 
-    /* PAY NOW BUTTON */
+    /* GENERATE QR BUTTON */
     .pay-btn {
         display: block;
         width: 100%;
@@ -114,6 +114,10 @@
     .center {
         text-align: center;
     }
+
+    #generatedQR {
+        display: none;
+    }
 </style>
 </head>
 
@@ -127,13 +131,13 @@
     <h2>💳 Payment Instructions</h2>
 
     <p>
-        প্রথমে নিচের <b>PAY NOW</b> button-এ click করুন।
-        আপনার UPI app খুলবে।
+        প্রথমে নিচে আপনার payment amount লিখুন।
+        তারপর <b>GENERATE QR</b> button-এ click করুন।
     </p>
 
     <p>
-        UPI app-এর ভিতরে আপনার ইচ্ছামতো payment amount লিখে
-        payment complete করুন।
+        আপনার দেওয়া amount অনুযায়ী একটি নতুন QR code তৈরি হবে।
+        সেই QR scan করে payment complete করুন।
     </p>
 
     <p>
@@ -143,37 +147,72 @@
 
     <p>
         <b>Hindi:</b><br>
-        Sabse pehle <b>PAY NOW</b> button par click karein.
-        Aapka UPI app open hoga.
-        UPI app ke andar apni amount enter karke payment complete karein.
+        Sabse pehle neeche apni payment amount enter karein.
+        Phir <b>GENERATE QR</b> button par click karein.
+        Aapke amount ke hisaab se naya QR code generate hoga.
+        QR scan karke payment complete karein.
     </p>
 
 </div>
 
 
-<!-- PAY NOW -->
+<!-- PAYMENT -->
 <div class="box">
 
-    <h2>💚 Pay Now</h2>
+    <h2>💚 Payment</h2>
 
     <p>
         UPI ID:
         <b>piyalisweetumisti@nsdl</b>
     </p>
 
-    <p class="note">
-        কোনো amount এখানে আগে থেকে set করা নেই।
-        UPI app open হওয়ার পরে নিজের amount লিখবেন।
-    </p>
+    <label>Enter Amount (₹)</label>
 
-    <button class="pay-btn" onclick="payNow()">
-        💳 PAY NOW
+    <input
+        type="number"
+        id="amount"
+        placeholder="Enter amount"
+        min="1"
+        step="0.01"
+    >
+
+    <button class="pay-btn" onclick="generateQR()">
+        💳 GENERATE QR
     </button>
 
 </div>
 
 
-<!-- QR PAYMENT -->
+<!-- GENERATED QR -->
+<div class="box center" id="generatedQR">
+
+    <h2>📲 Scan & Pay</h2>
+
+    <p>
+        নিচের QR code scan করে payment করুন।
+    </p>
+
+    <img
+        id="qrImage"
+        src=""
+        alt="Generated Payment QR"
+        class="qr-img"
+    >
+
+    <p>
+        Amount:
+        ₹<span id="showAmount"></span>
+    </p>
+
+    <p>
+        UPI ID:<br>
+        <b>piyalisweetumisti@nsdl</b>
+    </p>
+
+</div>
+
+
+<!-- STATIC QR PAYMENT -->
 <div class="box center">
 
     <h2>📲 Pay Using QR</h2>
@@ -220,6 +259,7 @@
     <h2>📞 Your Details</h2>
 
     <label>Your Name</label>
+
     <input
         type="text"
         id="yourName"
@@ -227,6 +267,7 @@
     >
 
     <label>Phone / WhatsApp Number</label>
+
     <input
         type="tel"
         id="phone"
@@ -234,6 +275,7 @@
     >
 
     <label>Service</label>
+
     <input
         type="text"
         id="service"
@@ -250,18 +292,49 @@
 <script>
 
 /* =========================
-   UPI PAYMENT
+   GENERATE AMOUNT QR
    ========================= */
 
-function payNow() {
+function generateQR() {
+
+    const amountInput =
+        document.getElementById("amount");
+
+    const amount =
+        amountInput.value.trim();
+
+    if (amount === "" || Number(amount) <= 0) {
+
+        alert("Please enter a valid payment amount.");
+
+        amountInput.focus();
+
+        return;
+    }
 
     const upi =
         "upi://pay" +
         "?pa=piyalisweetumisti@nsdl" +
         "&pn=PIYALI%20GHOSH" +
+        "&am=" + encodeURIComponent(Number(amount).toFixed(2)) +
         "&cu=INR";
 
-    window.location.href = upi;
+    const qrURL =
+        "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
+        encodeURIComponent(upi);
+
+    document.getElementById("qrImage").src = qrURL;
+
+    document.getElementById("showAmount").textContent =
+        Number(amount).toFixed(2);
+
+    document.getElementById("generatedQR").style.display =
+        "block";
+
+    document.getElementById("generatedQR").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
 }
 
 
@@ -275,7 +348,9 @@ function doneMessage() {
         document.getElementById("screenshot").files.length;
 
     if (screenshot === 0) {
+
         alert("Please upload your payment screenshot first.");
+
         return;
     }
 
